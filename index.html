@@ -21,7 +21,6 @@
             overflow: hidden;
         }
 
-        /* Container Partikel */
         .particles {
             position: absolute;
             top: 0;
@@ -111,6 +110,10 @@
         .spike-btn:hover { 
             transform: translateY(-4px) scale(1.05); 
         }
+
+        .toast {
+            animation: slideUp 0.4s ease-out, fadeOut 0.4s ease-in 2.2s forwards;
+        }
     </style>
 </head>
 <body class="bg-[#3a2a1f] text-white">
@@ -140,10 +143,8 @@
         </div>
     </nav>
 
-    <!-- HERO dengan Partikel -->
+    <!-- HERO -->
     <div class="relative min-h-screen pt-20 overflow-hidden hero-bg">
-        
-        <!-- Partikel Background -->
         <div id="particles" class="particles"></div>
 
         <div class="relative z-20 flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] px-4 text-center">
@@ -177,14 +178,13 @@
             </div>
         </div>
 
-        <!-- Spike Kiri -->
+        <!-- Spike Kiri & Kanan -->
         <div class="absolute left-8 top-1/2 -translate-y-1/2 z-30 hidden lg:block">
             <img src="https://i.imgur.com/QnJz2LL.png" 
                  alt="Spike Left" 
                  class="floating-spike w-44 md:w-52 lg:w-60 object-contain">
         </div>
 
-        <!-- Spike Kanan -->
         <div class="absolute right-8 top-1/2 -translate-y-1/2 z-30 hidden lg:block">
             <img src="https://i.imgur.com/fjNVviF.png" 
                  alt="Spike Right" 
@@ -218,12 +218,12 @@
     </footer>
 
     <script>
-        // ================== PARTICLES BACKGROUND (45 partikel - lebih ringan) ==================
+        // Partikel Background
         function createParticles() {
             const container = document.getElementById('particles');
             const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff'];
             
-            for (let i = 0; i < 45; i++) {   // Jumlah partikel dikurangi menjadi 45
+            for (let i = 0; i < 45; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 
@@ -243,7 +243,50 @@
             }
         }
 
-        // ================== SCRIPT LAINNYA ==================
+        // BUY $SPIKE
+        function buySpike() {
+            createMiniConfetti();
+            setTimeout(() => {
+                window.open('https://launch.enshrined.exchange/token/0x20c0000000000000000000001e6cbF9257ACE8cF', '_blank');
+            }, 600);
+        }
+
+        // COPY CA - Salin alamat contract
+        function copyCA() {
+            const ca = "0x20c0000000000000000000001e6cbF9257ACE8cF";
+            
+            navigator.clipboard.writeText(ca).then(() => {
+                // Tampilkan toast notifikasi
+                showToast("CA Copied!");
+                createMiniConfetti();
+            }).catch(() => {
+                // Fallback jika clipboard gagal
+                const textArea = document.createElement("textarea");
+                textArea.value = ca;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                showToast("CA Copied!");
+                createMiniConfetti();
+            });
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.createElement("div");
+            toast.className = `fixed bottom-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-8 py-4 rounded-2xl flex items-center gap-3 text-sm font-bold shadow-2xl z-[9999] toast`;
+            toast.innerHTML = `
+                <i class="fas fa-check-circle"></i> 
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2600);
+        }
+
         function showTempoPopup() {
             const loading = document.getElementById('loadingScreen');
             loading.classList.remove('hidden');
@@ -258,14 +301,6 @@
                 
                 createMiniConfetti();
             }, 1100);
-        }
-
-        function buySpike() {
-            showTempoPopup();
-        }
-
-        function copyCA() {
-            showTempoPopup();
         }
 
         function closePopup() {
@@ -286,7 +321,7 @@
             }
         }
 
-        // Inisialisasi Partikel saat halaman dimuat
+        // Inisialisasi
         window.onload = () => {
             createParticles();
         };
